@@ -1,8 +1,12 @@
+//  Sawi Logo
+//  Sawi background
+//  Sawi edit lal Talkbalk so it can correctly speak out the buttons and everything.
+
+
 package com.example.qrcodeins_java;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,8 +22,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -29,6 +31,7 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringJoiner;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final String[] array = new String[]{"1dN1Ctc7cyXI9Jtzxgaf", "LmrK7Xc9gkHGWSqVW2Fr", "djIBnE3sUkIBryianlYJ", "LUCe6UOiq0pytT8KKRYz", "5lTVcMs8ictLQEW8DrPO"};
     //                                               Reception Area            Study Area            Multimedia Lab            Ricoh Area                 Toilet
 
-    private String targetDestination = null;
+    private String targetDestination = "";
     private TextToSpeech tts;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String phrase = "";
@@ -57,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button toggleReplay = findViewById(R.id.btnReplay);
         toggleReplay.setOnClickListener(this);
+
+        Button toggleTargetDestination = findViewById(R.id.btnTargetDestination);
+        toggleTargetDestination.setOnClickListener(this);
 
         setupTextToSpeech();
         getCheckpoints();
@@ -87,8 +93,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (task.isSuccessful()) {
                                 HashMap<String, String> tempStorage = new HashMap<>();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    String temp = document.getString("location") + ". " + document.getString("description") + ".";
-                                    tempStorage.put(document.getId(), temp);
+                                    if (document.getData().size() == 1) {
+                                        String temp = document.getString("description");
+                                        tempStorage.put(document.getId(), temp);
+                                    } else if (document.getData().size() == 2) {
+                                        String temp = document.getString("location") + ". " + document.getString("description") + ".";
+                                        tempStorage.put(document.getId(), temp);
+                                    }
                                 }
                                 setCheckpoints(tempStorage);
                             } else {
@@ -99,6 +110,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setCheckpoints(HashMap<String, String> tempMap) {
         checkpoints = new HashMap<>(tempMap);
+
+        for (Map.Entry<String, String> entry:
+                checkpoints.entrySet()) {
+            Log.d(TAG, entry.getKey() + ": " + entry.getValue());
+        }
     }
 
     @Override
@@ -109,12 +125,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             intentIntegrator.setOrientationLocked(false);
             intentIntegrator.setBeepEnabled(false);
             intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-            intentIntegrator.initiateScan();
+            intentIntegrator.setPrompt("");
+            try {
+                intentIntegrator.initiateScan();
+            } catch (Exception e) {
+                Log.e(TAG, "Task Failed", e);
+            }
+
         }
 
         if (v.getId() == R.id.btnReplay) {
             tts.speak(previousPhrase, TextToSpeech.QUEUE_FLUSH, null, null);
         }
+
+        if (v.getId() == R.id.btnTargetDestination) {
+            String something = "";
+
+            // CHECKPOINT IS NULL FOR SOME FREAKING REASON
+            for (Map.Entry<String, String> entry
+                    : checkpoints.entrySet()) {
+                if (entry.getKey().equals(targetDestination)) {
+                    something = entry.getValue();
+                    break;
+                }
+                // else, continue searching through
+            }
+
+            if (something.equalsIgnoreCase("")) {
+                Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "It has: " + something, Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 
     @Override
@@ -213,30 +256,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // upon reaching the destination is that the targetDestination is not equal to
         // the decodedDataGlobal for some reason. But which one of them is faulty?
 
+
+
+        // If target is set then we can evaluate whether the user arrived or not.
+        // If the user has arrived at target destination, the app should congratulate the user.
+        // Else, then we check whether the scanned QR code is not left or right path codes.
+
         try {
-            if (targetDestination.equals(decodedDataGlobal)) {
-                if (isTargetSet) {
+        // START
+            if (isTargetSet) {
+                if (targetDestination.equals(decodedDataGlobal)) {
                     tts.speak("Congratulations, you have reached your destination.", TextToSpeech.QUEUE_ADD, null, null);
                     isTargetSet = false;
                     isGoingBack = true;
+                    targetDestination = "";
                     return;
+                } else {
+                    if (phrase.toLowerCase().contains("left path") ||
+                            phrase.toLowerCase().contains("right path")) {
+                        return;
+                    } else {
+                        tts.speak("Please move forward.", TextToSpeech.QUEUE_ADD, null, null);
+                    }
                 }
             }
+        // END
         } catch (Exception e) {
             Log.d(TAG, e.toString());
         }
 
-        if (isTargetSet) {
-            if (phrase.toLowerCase().contains("left path") ||
-                    phrase.toLowerCase().contains("right path")) {
-                return;
-            } else {
-                tts.speak("Please move forward.", TextToSpeech.QUEUE_ADD, null, null);
-            }
-        }
+        // How to say "Please move forward" successfully? And what are the conditions?
+
+        // The only condition to say it is if the target is set AND the scanned QR code is not
+        // one of those right or left path nonsense.
+        // I believe that if the target is not set, then it should go thru anyways, so it is
+        // reasonable to leave the second condition if the first one did not pass.
+        // Now assuming the targetDestination is equal to decodedDataGlobal and the target is set,
+        // that indicates that the user has arrived at his/her destination. Assuming that the
+        // targetDestination is set and
 
         if (!isTargetSet) {
-            askForUserInput();
+            switch(decodedDataGlobal) {
+                case "6rOkhN8QGR9ufxdfq20H":
+                case "lun9LF28b4j2pghaHCOh":
+                    break;
+                default:
+                    askForUserInput();
+            }
         }
     }
 
@@ -249,11 +315,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         while (tts.isSpeaking()) {
             // Pause the flow of the system
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(1000);
+            android.os.SystemClock.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -264,31 +331,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void confirmTargetDestination(String targetDes) {
 
         if(targetDes.toLowerCase().contains("study area")) {
-            tts.speak("Target Destination Confirmed. Please move forward.", TextToSpeech.QUEUE_FLUSH, null, null);
+            tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
             findOptimalPath(targetDes);
             return;
         }
 
         if(targetDes.toLowerCase().contains("toilet")) {
-            tts.speak("Target Destination Confirmed. Please move forward.", TextToSpeech.QUEUE_FLUSH, null, null);
+            tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
             findOptimalPath(targetDes);
             return;
         }
 
         if(targetDes.toLowerCase().contains("multimedia lab")) {
-            tts.speak("Target Destination Confirmed. Please move forward.", TextToSpeech.QUEUE_FLUSH, null, null);
+            tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
             findOptimalPath(targetDes);
             return;
         }
 
         if(targetDes.toLowerCase().contains("rico area")) {
-            tts.speak("Target Destination Confirmed. Please move forward.", TextToSpeech.QUEUE_FLUSH, null, null);
+            tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
             findOptimalPath(targetDes);
             return;
         }
 
         if(targetDes.toLowerCase().contains("reception area")) {
-            tts.speak("Target Destination Confirmed. Please move forward.", TextToSpeech.QUEUE_FLUSH, null, null);
+            tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
             findOptimalPath(targetDes);
             return;
         }
@@ -297,11 +364,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         while (tts.isSpeaking()) {
             // Pause the flow of the system
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(500);
+                android.os.SystemClock.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
 
         getUserInput();
@@ -312,7 +380,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //  ==============================================================================================================
 
     public void findOptimalPath(String td) {
-        this.targetDestination = td;
 
         // If the variable targetDestination is not empty, that means the user has set a target.
         // In order to check the targetDestination is reached, we need to check if the targetDestination
@@ -332,11 +399,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         for (Map.Entry<String, String> entry
                 : checkpoints.entrySet()) {
-            if (entry.getValue().toLowerCase().contains(targetDestination.toLowerCase())) {
+            if (entry.getValue().toLowerCase().contains(td.toLowerCase())) {
                 targetDestination = entry.getKey();
-            } else {
-                // just continue searching through
             }
+            // else, continue searching through
         }
 
         isTargetSet = true;
@@ -351,6 +417,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         isGoingBack = currentIndex > targetIndex;
+
+        if (isGoingBack) {
+            tts.speak("Please move backward.", TextToSpeech.QUEUE_ADD, null, null);
+        } else {
+            tts.speak("Please move forward.", TextToSpeech.QUEUE_ADD, null, null);
+        }
     }
 
     private void vibrate() {

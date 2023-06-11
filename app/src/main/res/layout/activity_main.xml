@@ -18,19 +18,32 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth="250dp"/>
 
     <Button
         android:id="@+id/btnReplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:fontFamily="@font/raleway_regular"
         android:text="Replay Previous Checkpoint"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/btnScan"
         app:layout_constraintStart_toStartOf="@+id/btnScan"
-        app:layout_constraintTop_toBottomOf="@+id/btnScan" />
+        app:layout_constraintTop_toBottomOf="@+id/btnScan"
+        app:layout_constraintWidth="match_constraint" />
+
+    <Button
+        android:id="@+id/btnTargetDestination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/raleway_regular"
+        app:layout_constraintWidth="match_constraint"
+        android:text="Replay Target Destination (Testing Purposes)"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/btnReplay"
+        app:layout_constraintStart_toStartOf="@+id/btnReplay"
+        app:layout_constraintTop_toBottomOf="@+id/btnReplay" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
