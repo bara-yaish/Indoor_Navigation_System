@@ -10,16 +10,16 @@
 
     <Button
         android:id="@+id/btnScan"
+        android:text="Scan QR Code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="296dp"
         android:fontFamily="@font/raleway_regular"
-        android:text="Scan QR Code"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth="250dp"/>
+        app:layout_constraintWidth="250dp" />
 
     <Button
         android:id="@+id/btnReplay"
@@ -44,6 +44,5 @@
         app:layout_constraintEnd_toEndOf="@+id/btnReplay"
         app:layout_constraintStart_toStartOf="@+id/btnReplay"
         app:layout_constraintTop_toBottomOf="@+id/btnReplay" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

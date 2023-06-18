@@ -1,8 +1,3 @@
-//  Sawi Logo
-//  Sawi background
-//  Sawi edit lal Talkbalk so it can correctly speak out the buttons and everything.
-
-
 package com.example.qrcodeins_java;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
@@ -31,7 +26,6 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.StringJoiner;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -154,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (something.equalsIgnoreCase("")) {
                 Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "It has: " + something, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "It has: \n" + something, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -315,12 +309,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         while (tts.isSpeaking()) {
             // Pause the flow of the system
-//            try {
-//                Thread.sleep(1000);
-            android.os.SystemClock.sleep(500);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                Thread.sleep(1000);
+//            android.os.SystemClock.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -363,13 +357,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tts.speak("Invalid Target Destination. Please input your target destination again.", TextToSpeech.QUEUE_FLUSH, null, null);
 
         while (tts.isSpeaking()) {
-            // Pause the flow of the system
-//            try {
-//                Thread.sleep(500);
-                android.os.SystemClock.sleep(500);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+//             Pause the flow of the system
+            try {
+                Thread.sleep(500);
+//                android.os.SystemClock.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         getUserInput();
