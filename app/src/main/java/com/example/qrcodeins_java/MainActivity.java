@@ -135,21 +135,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == R.id.btnTargetDestination) {
             String something = "";
 
-            // CHECKPOINT IS NULL FOR SOME FREAKING REASON
-            for (Map.Entry<String, String> entry
-                    : checkpoints.entrySet()) {
-                if (entry.getKey().equals(targetDestination)) {
-                    something = entry.getValue();
-                    break;
-                }
-                // else, continue searching through
-            }
-
-            if (something.equalsIgnoreCase("")) {
-                Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "It has: \n" + something, Toast.LENGTH_SHORT).show();
-            }
+            Log.d(TAG, "The set target destination: " + targetDestination);
+//            try {
+//                if (isTargetSet) {
+//                    do {
+//                        // CHECKPOINT IS NULL FOR SOME FREAKING REASON
+//                        for (Map.Entry<String, String> entry
+//                                : checkpoints.entrySet()) {
+//                            if (entry.getKey().equals(targetDestination)) {
+//                                something = entry.getValue();
+//                                break;
+//                            }
+//                            // else, continue searching through
+//                        }
+//                    }while(something.isEmpty());
+//
+//                    Toast.makeText(this, "It has: \n" + something, Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(this, "Target is not set.", Toast.LENGTH_SHORT).show();
+//                }
+//            }catch (Exception e) {
+//                e.printStackTrace();
+//            }
         }
 
     }
@@ -390,10 +397,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // To do that, we need to loop thru each entry and ask if the targetDestination is in one of those
         // entries' values in which will then assign the key to the targetDestination variable.
 
+        targetDestination = td;
 
         for (Map.Entry<String, String> entry
                 : checkpoints.entrySet()) {
-            if (entry.getValue().toLowerCase().contains(td.toLowerCase())) {
+            if (entry.getValue().toLowerCase().contains(targetDestination.toLowerCase())) {
                 targetDestination = entry.getKey();
             }
             // else, continue searching through
