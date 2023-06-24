@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button toggleTargetDestination = findViewById(R.id.btnTargetDestination);
         toggleTargetDestination.setOnClickListener(this);
 
+        toggleReplay.setContentDescription("Replay Previous Checkpoint");
+        toggleScan.setContentDescription("Scan QR Code");
+        toggleTargetDestination.setContentDescription("Replay Target Destination");
+
         setupTextToSpeech();
         getCheckpoints();
     }
