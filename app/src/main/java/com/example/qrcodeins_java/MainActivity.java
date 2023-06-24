@@ -257,8 +257,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // upon reaching the destination is that the targetDestination is not equal to
         // the decodedDataGlobal for some reason. But which one of them is faulty?
 
-
-
         // If target is set then we can evaluate whether the user arrived or not.
         // If the user has arrived at target destination, the app should congratulate the user.
         // Else, then we check whether the scanned QR code is not left or right path codes.
@@ -331,33 +329,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void confirmTargetDestination(String targetDes) {
 
-        if(targetDes.toLowerCase().contains("study area")) {
+        if (targetDes.toLowerCase().contains("study area")) {
             tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
             findOptimalPath(targetDes);
             return;
         }
 
-        if(targetDes.toLowerCase().contains("toilet")) {
+        if (targetDes.toLowerCase().contains("toilet")) {
             tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
             findOptimalPath(targetDes);
             return;
         }
 
-        if(targetDes.toLowerCase().contains("multimedia lab")) {
+        if (targetDes.toLowerCase().contains("multimedia lab")) {
             tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
             findOptimalPath(targetDes);
             return;
         }
 
-        if(targetDes.toLowerCase().contains("rico area")) {
+        if (targetDes.toLowerCase().contains("rico area")) {
             tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
             findOptimalPath(targetDes);
             return;
         }
 
-        if(targetDes.toLowerCase().contains("reception area")) {
+        if (targetDes.toLowerCase().contains("reception area")) {
             tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
             findOptimalPath(targetDes);
+            return;
+        }
+
+        if (targetDes.toLowerCase().contains("stop")) {
+            tts.speak("Understood.", TextToSpeech.QUEUE_FLUSH, null, null);
             return;
         }
 
