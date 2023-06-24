@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toggleScan.setContentDescription("Scan QR Code");
         toggleTargetDestination.setContentDescription("Replay Target Destination");
 
+        this.setTitle("Welcome to Home Page");
+
         setupTextToSpeech();
         getCheckpoints();
     }
