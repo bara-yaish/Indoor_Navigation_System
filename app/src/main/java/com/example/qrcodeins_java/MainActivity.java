@@ -51,17 +51,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         Button toggleScan = findViewById(R.id.btnScan);
+        toggleScan.setContentDescription("Scan QR Code");
         toggleScan.setOnClickListener(this);
 
         Button toggleReplay = findViewById(R.id.btnReplay);
+        toggleReplay.setContentDescription("Replay Previous Checkpoint");
         toggleReplay.setOnClickListener(this);
 
         Button toggleTargetDestination = findViewById(R.id.btnTargetDestination);
+        toggleTargetDestination.setContentDescription("Replay Target Destination");
         toggleTargetDestination.setOnClickListener(this);
 
-        toggleReplay.setContentDescription("Replay Previous Checkpoint");
-        toggleScan.setContentDescription("Scan QR Code");
-        toggleTargetDestination.setContentDescription("Replay Target Destination");
 
         this.setTitle("Welcome to Home Page");
 
