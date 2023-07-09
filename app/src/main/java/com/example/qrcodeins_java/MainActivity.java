@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.messaging.reporting.MessagingClientEvent;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -142,27 +143,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String something = "";
 
             Log.d(TAG, "The set target destination: " + targetDestination);
-//            try {
-//                if (isTargetSet) {
-//                    do {
-//                        // CHECKPOINT IS NULL FOR SOME FREAKING REASON
-//                        for (Map.Entry<String, String> entry
-//                                : checkpoints.entrySet()) {
-//                            if (entry.getKey().equals(targetDestination)) {
-//                                something = entry.getValue();
-//                                break;
-//                            }
-//                            // else, continue searching through
-//                        }
-//                    }while(something.isEmpty());
-//
-//                    Toast.makeText(this, "It has: \n" + something, Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(this, "Target is not set.", Toast.LENGTH_SHORT).show();
-//                }
-//            }catch (Exception e) {
-//                e.printStackTrace();
-//            }
         }
 
     }
