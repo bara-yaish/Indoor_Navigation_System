@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                             Log.e("TTS", "Language not supported");
                         } else {
-                            Toast.makeText(getApplicationContext(), "TTS Successfully Connected!", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "TTS Successfully Connected!");
                         }
                     } else {
                         Log.e("TTS", "Initialization Failed :( ");
