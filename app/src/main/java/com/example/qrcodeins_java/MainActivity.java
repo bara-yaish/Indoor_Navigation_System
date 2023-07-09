@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (v.getId() == R.id.btnTargetDestination) {
             String something = "";
-
             Log.d(TAG, "The set target destination: " + targetDestination);
         }
 
