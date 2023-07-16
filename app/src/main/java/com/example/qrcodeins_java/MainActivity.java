@@ -132,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } catch (Exception e) {
                 Log.e(TAG, "Task Failed", e);
             }
-
         }
 
         if (v.getId() == R.id.btnReplay) {
@@ -297,15 +296,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void getUserInput() {
 
-        while (tts.isSpeaking()) {
-            // Pause the flow of the system
-            try {
-                Thread.sleep(1000);
-//            android.os.SystemClock.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        waitPlease();
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -316,51 +307,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (targetDes.toLowerCase().contains("study area")) {
             tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
+            waitPlease();
             findOptimalPath(targetDes);
             return;
         }
 
         if (targetDes.toLowerCase().contains("toilet")) {
             tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
+            waitPlease();
             findOptimalPath(targetDes);
             return;
         }
 
         if (targetDes.toLowerCase().contains("multimedia lab")) {
             tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
+            waitPlease();
             findOptimalPath(targetDes);
             return;
         }
 
         if (targetDes.toLowerCase().contains("rico area")) {
             tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
+            waitPlease();
             findOptimalPath(targetDes);
             return;
         }
 
         if (targetDes.toLowerCase().contains("reception area")) {
             tts.speak("Target Destination Confirmed.", TextToSpeech.QUEUE_FLUSH, null, null);
+            waitPlease();
             findOptimalPath(targetDes);
             return;
         }
 
         if (targetDes.toLowerCase().contains("stop")) {
             tts.speak("Understood.", TextToSpeech.QUEUE_FLUSH, null, null);
+            waitPlease();
             return;
         }
 
         tts.speak("Invalid Target Destination. Please input your target destination again.", TextToSpeech.QUEUE_FLUSH, null, null);
-
-        while (tts.isSpeaking()) {
-//             Pause the flow of the system
-            try {
-                Thread.sleep(500);
-//                android.os.SystemClock.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
+        waitPlease();
         getUserInput();
     }
 
@@ -424,6 +411,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             );
         } else {
             vibrator.vibrate(600);
+        }
+    }
+
+    private void waitPlease() {
+        while (tts.isSpeaking()) {
+//             Pause the flow of the system
+            try {
+                Thread.sleep(1000);
+//                android.os.SystemClock.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
