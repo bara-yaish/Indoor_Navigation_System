@@ -7,4 +7,4 @@ The user of the navigation system scans the QR codes found on the floor next to 
 
 This proposed system allows the user to speak to the application rather than trying to use the necessary means to click on the screen, which creates a mean for the user to communicate without having to go through the trouble to find the options and buttons on the screen. Hence, allowing the user to travel around indoor spaces with comfort and independently.
 
- ![An image of my project poster.](/assets/images/i20019682_Bara_Yaish_posterPresentation.png "Poster Presentation")
+ ![An image of my project poster.](/assets/images/poster.png "Poster Presentation")
